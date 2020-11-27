@@ -1,35 +1,36 @@
 from extensions import db
 
-rooms_list = []
+bookings_list = []
 
 
-class Room(db.Model):
-    __tablename__ = 'rooms'
+class Booking(db.Model):
+    __tablename__ = 'bookings'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
+    booked_day = db.Column(db.Date(), nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now(), onupdate = db.func.now())
-    bookings = db.relationship('bookings', backref='rooms')
+    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
+    room_id = db.Column(db.Integer(), db.ForeignKey("rooms.id"))
 
     @classmethod
-    def get_all_public(cls):
-        return cls.query.filter_by(room_is_public=True).all()
+    def get_all_published(cls):
+        return cls.query.filter_by(is_publish=True).all()
 
-<<<<<<< Updated upstream
     @classmethod
     def get_all_by_user(cls, user_id, visibility='public'):
         if visibility == 'public':
-            return cls.query.filter_by(reserved_user_id=user_id, room_is_public=True).all()
+            return cls.query.filter_by(user_id=user_id, is_publish=True).all()
         elif visibility == 'private':
-            return cls.query.filter_by(reserved_user_id=user_id, room_is_public=False).all()
+            return cls.query.filter_by(user_id=user_id, is_publish=False).all()
         else:
-            return cls.query.filter_by(reserved_user_id=user_id).all()
+            return cls.query.filter_by(user_id=user_id).all()
 
     @classmethod
-    def get_by_id(cls, room_id):
-        return cls.query.filter_by(id=room_id).first()
+    def get_by_id(cls, booking_id):
+        return cls.query.filter_by(id=booking_id).first()
 
     def save(self):
         db.session.add(self)
@@ -41,5 +42,3 @@ class Room(db.Model):
 
 
 
-=======
->>>>>>> Stashed changes
