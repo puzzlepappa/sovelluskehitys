@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, post_dump, validate, validates, ValidationError
 from schemas.user import UserSchema
+from schemas.room import RoomSchema
 import datetime
 
 
@@ -21,8 +22,6 @@ class BookingSchema(Schema):
     room_id = fields.Nested(RoomSchema, attribute="rooms", dump_only=True, only=["id", "name"])
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
-
-
 
     @post_dump(pass_many=True)
     def wrap(self, data, many, **kwargs):
