@@ -4,8 +4,8 @@ from flask_restful import Api
 from config import Config
 from extensions import db, jwt
 from models.rooms import room
-from resources.instruction import InstructionListResource, InstructionResource, InstructionPublishResource
-from resources.user import UserListResource, UserResource, MeResource, UserInstructionListResource
+from resources.booking import BookingListResource, BookingResource, BookingPublishResource
+from resources.user import UserListResource, UserResource, MeResource, UserBookingListResource
 from resources.token import TokenResource, RefreshResource, RevokeResource, black_list
 
 def create_app():
@@ -34,11 +34,11 @@ def register_resources(app):
     api = Api(app)
     api.add_resource(UserListResource, '/users')
     api.add_resource(UserResource, '/users/<string:username>')
-    api.add_resource(UserInstructionListResource, '/users/<string:username>/instructions')
+    api.add_resource(UserBookingListResource, '/users/<string:username>/bookings')
     api.add_resource(TokenResource, '/token')
-    api.add_resource(InstructionListResource, '/instructions')
-    api.add_resource(InstructionResource, '/instructions/<int:instruction_id>')
-    api.add_resource(InstructionPublishResource, '/instructions/<int:instruction_id>/publish')
+    api.add_resource(BookingListResource, '/bookings')
+    api.add_resource(BookingResource, '/bookings/<int:booking_id>')
+    api.add_resource(BookingPublishResource, '/bookings/<int:booking_id>/publish')
     api.add_resource(MeResource, "/me")
     api.add_resource(RefreshResource, '/refresh')
     api.add_resource(RevokeResource, '/revoke')
