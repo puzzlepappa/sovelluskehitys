@@ -66,10 +66,7 @@ class BookingResource(Resource):
 
         booking.name = data.get('name') or booking.name
         booking.description = data.get('description') or booking.description
-        booking.steps = data.get('steps') or booking.steps
-        booking.tools = data.get('tools') or booking.tools
-        booking.cost = data.get('cost') or booking.cost
-        booking.duration = data.get('duration') or booking.duration
+        booking.booked_day = data.get('booked_day') or booking.booked_day
 
         booking.save()
         return booking_schema.dump(booking).data, HTTPStatus.OK
