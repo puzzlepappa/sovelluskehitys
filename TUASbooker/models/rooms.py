@@ -17,7 +17,6 @@ class Room(db.Model):
     def get_all_public(cls):
         return cls.query.filter_by(room_is_public=True).all()
 
-<<<<<<< Updated upstream
     @classmethod
     def get_all_by_user(cls, user_id, visibility='public'):
         if visibility == 'public':
@@ -40,6 +39,3 @@ class Room(db.Model):
         db.session.commit()
 
 
-
-=======
->>>>>>> Stashed changes
