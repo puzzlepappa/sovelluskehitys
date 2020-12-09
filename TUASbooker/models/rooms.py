@@ -9,13 +9,14 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
+    is_public=db.Column(db.Bool,nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now(), onupdate = db.func.now())
     bookings = db.relationship('bookings', backref='rooms')
 
     @classmethod
     def get_all_public(cls):
-        return cls.query.filter_by(room_is_public=True).all()
+        return cls.query.filter_by(is_public=True).all()
 
     @classmethod
     def get_all_by_user(cls, user_id, visibility='public'):
