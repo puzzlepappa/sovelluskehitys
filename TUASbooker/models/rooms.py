@@ -16,16 +16,16 @@ class Room(db.Model):
 
     @classmethod
     def get_all_public(cls):
-        return cls.query.filter_by(is_public=True).all()
+        return cls.query.filter_by(room_is_public=True).all()
 
     @classmethod
     def get_all_by_user(cls, user_id, visibility='public'):
         if visibility == 'public':
-            return cls.query.filter_by(reserved_user_id=user_id, room_is_public=True).all()
+            return cls.query.filter_by(author=user_id, room_is_public=True).all()
         elif visibility == 'private':
-            return cls.query.filter_by(reserved_user_id=user_id, room_is_public=False).all()
+            return cls.query.filter_by(author=user_id, room_is_public=False).all()
         else:
-            return cls.query.filter_by(reserved_user_id=user_id).all()
+            return cls.query.filter_by(author=user_id).all()
 
     @classmethod
     def get_by_id(cls, room_id):
