@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from config import Config
 from extensions import db, jwt
-from models.rooms import room
+from models.rooms import Room
 from resources.booking import BookingListResource, BookingResource, BookingPublishResource
 from resources.user import UserListResource, UserResource, MeResource, UserBookingListResource
 from resources.token import TokenResource, RefreshResource, RevokeResource, black_list

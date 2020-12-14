@@ -9,7 +9,7 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
-    is_public=db.Column(db.Bool,nullable=False)
+    is_public=db.Column(db.Boolean(),nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now(), onupdate = db.func.now())
     bookings = db.relationship('bookings', backref='rooms')
