@@ -17,7 +17,7 @@ class Booking(db.Model):
 
     @classmethod
     def get_all_published(cls):
-        return cls.query.filter_by(is_publish=True).all()
+        return cls.query.all()
 
     @classmethod
     def get_all_by_user(cls, user_id, visibility='public'):

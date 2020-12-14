@@ -12,7 +12,7 @@ class Room(db.Model):
     is_public=db.Column(db.Boolean(),nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now(), onupdate = db.func.now())
-    bookings = db.relationship('bookings', backref='rooms')
+    bookings = db.relationship('Booking', backref='rooms')
 
     @classmethod
     def get_all_public(cls):
