@@ -1,5 +1,5 @@
 from extensions import db
-
+from models.bookings import Booking
 rooms_list = []
 
 
@@ -30,6 +30,14 @@ class Room(db.Model):
     @classmethod
     def get_by_id(cls, room_id):
         return cls.query.filter_by(id=room_id).first()
+
+    @classmethod
+    def get_all_booked_dates(cls, room_id):
+        room_bookings = Booking.get_all_booked_dates(room_id)
+        dates_list = []
+        for booking in room_bookings:
+            dates_list.append(booking.booked_day)
+        return dates_list
 
     def save(self):
         db.session.add(self)

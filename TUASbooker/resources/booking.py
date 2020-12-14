@@ -5,6 +5,7 @@ from models.bookings import Booking, bookings_list
 from models.rooms import Room
 from flask_jwt_extended import get_jwt_identity, jwt_required, jwt_optional
 from schemas.booking import BookingSchema
+import datetime
 
 booking_schema = BookingSchema()
 booking_list_schema = BookingSchema(many=True)
@@ -24,6 +25,11 @@ class BookingListResource(Resource):
         selected_room = Room.get_by_id(json_data.get("room_id"))
         if selected_room is None:
             return {"message": "Selected room to book is incorrect"}, HTTPStatus.BAD_REQUEST
+
+        bookdate = datetime.datetime.strptime(json_data.get("booked_day"), "%Y-%m-%d")
+        if bookdate.date() in Room.get_all_booked_dates(json_data.get("room_id")):
+            return {"message": "Room already booked for that day"}, HTTPStatus.BAD_REQUEST
+        
         booking = Booking(**data)
         booking.user_id = current_user
         booking.room_id = selected_room.id
