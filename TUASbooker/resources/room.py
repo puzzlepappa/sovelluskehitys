@@ -17,7 +17,7 @@ class RoomListResrouce(Resource):
     def post(self):
         json_data = request.get_json()
         current_user = get_jwt_identity()
-        data, errors = room_schema .load(data=json_data)
+        data, errors = room_schema.load(data=json_data)
         if errors:
             return {'message': "Validation errors", 'errors': errors},HTTPStatus.BAD_REQUEST
 

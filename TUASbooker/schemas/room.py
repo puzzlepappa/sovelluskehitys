@@ -12,11 +12,11 @@ class RoomSchema(Schema):
     class Meta:
         ordered = True
 
-    room_id = fields.Integer(dump_only=True)
-    room_name = fields.String(required=True, validate=[validate.Length(max=100)])
-    room_description = fields.String(validate=[validate.Length(max=200)])
-    room_reserve_duration = fields.Integer(validate=validate_duration)
-    room_is_public = fields.Boolean(dump_only=True)
+    id = fields.Integer(dump_only=True)
+    name = fields.String(required=True, validate=[validate.Length(max=100)])
+    description = fields.String(validate=[validate.Length(max=200)])
+    reserve_duration = fields.Integer(validate=validate_duration)
+    is_public = fields.Boolean(dump_only=True)
     author = fields.Nested(UserSchema, attribute="user", dump_only=True, only=["id", "username"])
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)

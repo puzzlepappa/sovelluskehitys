@@ -13,7 +13,7 @@ class Booking(db.Model):
     created_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default = db.func.now(), onupdate = db.func.now())
     user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
-    room_id = db.Column(db.Integer(), db.ForeignKey("rooms.id"))
+    room_id = db.Column(db.Integer(), db.ForeignKey("rooms.id"), nullable=False)
 
     @classmethod
     def get_all_published(cls):

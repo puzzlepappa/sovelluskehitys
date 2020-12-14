@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from http import HTTPStatus
 from models.bookings import Booking, bookings_list
+from models.rooms import Room
 from flask_jwt_extended import get_jwt_identity, jwt_required, jwt_optional
 from schemas.booking import BookingSchema
 
@@ -20,9 +21,12 @@ class BookingListResource(Resource):
         data, errors = booking_schema.load(data=json_data)
         if errors:
             return {'message': "Validation errors", 'errors': errors},HTTPStatus.BAD_REQUEST
-
+        selected_room = Room.get_by_id(json_data.get("room_id"))
+        if selected_room is None:
+            return {"message": "Selected room to book is incorrect"}, HTTPStatus.BAD_REQUEST
         booking = Booking(**data)
         booking.user_id = current_user
+        booking.room_id = selected_room.id
         booking.save()
         return booking_schema.dump(booking).data, HTTPStatus.CREATED
 
