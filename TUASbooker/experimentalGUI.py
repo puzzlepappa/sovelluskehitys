@@ -18,7 +18,7 @@ def adduser():
     var_username = username.get()
     var_email = email.get()
 
-    cur.execute('INSERT INTO "user" (username, email, password) VALUES ('"+var_username+"','"+var_email+"','"+hashed+"')')
+    cur.execute('INSERT INTO "user" (username, email, password) VALUES ("'+var_username+'","'+var_email+'","'+hashed+'")')
     conn.commit()
 
 
