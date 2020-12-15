@@ -20,7 +20,6 @@ def adduser():
 
     cur.execute("INSERT INTO user (username, email, password) VALUES ('"+var_username+"','"+var_email+"','"+hashed+"')")
     conn.commit()
-    conn.close()
 
 
 def insertRoom():
