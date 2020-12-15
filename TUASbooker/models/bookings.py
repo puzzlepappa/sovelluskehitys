@@ -16,7 +16,7 @@ class Booking(db.Model):
     room_id = db.Column(db.Integer(), db.ForeignKey("rooms.id"), nullable=False)
 
     @classmethod
-    def get_all_published(cls):
+    def get_all(cls):
         return cls.query.all()
 
     @classmethod

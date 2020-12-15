@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from http import HTTPStatus
-from models.bookings import Booking, bookings_list
+from models.bookings import Booking
 from models.rooms import Room
 from flask_jwt_extended import get_jwt_identity, jwt_required, jwt_optional
 from schemas.booking import BookingSchema
@@ -12,7 +12,7 @@ booking_list_schema = BookingSchema(many=True)
 
 class BookingListResource(Resource):
     def get(self):
-        bookings = Booking.get_all_published()
+        bookings = Booking.get_all()
         return booking_list_schema.dump(bookings).data, HTTPStatus.OK
 
     @jwt_required
