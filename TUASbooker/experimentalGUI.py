@@ -1,29 +1,58 @@
 from tkinter import *
 import psycopg2
+from utils import check_password, hash_password
+
+
 root = Tk()
-##Perform connection to database, or fail. change username and password to work with your own database.
+#Perform connection to database, or fail. change username and password to work with your own database.
 try:
-    conn=psycopg2.connect(database="tuasbooker", user="do_it_yourself",password="apapap",host="localhost")
+    conn = psycopg2.connect(database="tuasbooker", user="db", password="db", host="localhost")
     print("connected")
     cur = conn.cursor()
 except:
     print("Cant connect to db")
 
+
+def adduser():
+    hashed = hash_password(password.get())
+    var_username = username.get()
+    var_email = email.get()
+
+    cur.execute("INSERT INTO user (username, email, password) VALUES ('"+var_username+"','"+var_email+"','"+hashed+"')")
+    conn.commit()
+    conn.close()
+
+
 def insertRoom():
     var_room_name = room_name.get()
 
-    room_name.delete(0,END)
+    room_name.delete(0, END)
 
     var_room_desc = room_desc.get()
-    room_desc.delete(0,END)
-##here test is tablename, num is the room number which could be replaced by id technically. data is the room description.
-## Could make it so its "room id(automatic), room name(manual input) and room desc(manual input).
-## We also have who uploaded the room, so some sort of log in functionality needs to be made, or the adminuser just manually inputs the name
-    cur.execute("INSERT INTO test (num, data) VALUES ("+var_room_name+",'"+var_room_desc+"')")
-    conn.commit()
-    cur.close()
-    conn.close()
+    room_desc.delete(0, END)
+    var_username = username.get()
+    cur.execute("SELECT password FROM user WHERE username='"+var_username+"'")
+    hashed_pass = cur.fetchone()
+    writtenpassword = password.get()
+    hashed_pass_str = ''.join(hashed_pass)
 
+    if check_password(writtenpassword, hashed_pass_str):
+
+        cur.execute("INSERT INTO rooms (name, description) VALUES (" + var_room_name + ",'" + var_room_desc + "')")
+        conn.commit()
+
+        cur.close()
+        conn.close()
+        test = Label(root, text="added new room")
+        test.pack()
+    else:
+        test2 = Label(root, text="something went wrong, room not added")
+        test2.pack()
+
+
+#here test is tablename, num is the room number which could be replaced by id technically. data is the room description.
+# Could make it so its "room id(automatic), room name(manual input) and room desc(manual input).
+# We also have who uploaded the room, so some sort of log in functionality needs to be made, or the adminuser just manually inputs the name
 myLabel = Label(root, text="Name")
 myLabel.pack()
 room_name = Entry(root)
@@ -32,13 +61,26 @@ myLabel = Label(root, text="Description")
 myLabel.pack()
 room_desc = Entry(root)
 room_desc.pack()
-mysubmit = Button(root,text="Submit", command=insertRoom)
+mysubmit = Button(root, text="Submit", command=insertRoom)
 mysubmit.pack()
 
+usernamelabel = Label(root, text="Username")
+usernamelabel.pack()
+username = Entry(root)
 
+username.pack()
+emaillabel = Label(root, text="email")
+emaillabel.pack()
+email = Entry(root)
 
+email.pack()
+password = Entry(root)
 
+passwordlabel = Label(root, text="password")
+passwordlabel.pack()
+password.pack()
 
-
+myButton = Button(root, text="adduser", command=adduser)
+myButton.pack()
 
 root.mainloop()
