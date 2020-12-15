@@ -16,7 +16,6 @@ class RoomSchema(Schema):
     name = fields.String(required=True, validate=[validate.Length(max=100)])
     description = fields.String(validate=[validate.Length(max=200)])
     reserve_duration = fields.Integer(validate=validate_duration)
-    is_public = fields.Boolean(dump_only=True)
     author = fields.Nested(UserSchema, attribute="user", dump_only=True, only=["id", "username"])
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
