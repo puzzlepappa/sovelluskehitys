@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from http import HTTPStatus
 from models.rooms import rooms_list, Room
+from models.user import User
 from flask_jwt_extended import get_jwt_identity, jwt_required, jwt_optional
 from schemas.room import RoomSchema
 
@@ -24,23 +25,18 @@ class RoomListResource(Resource):
 
         room = Room(**data)
         room.user_id = current_user
+
         room.save()
         return room_schema.dump(room).data, HTTPStatus.CREATED
 
 
 class RoomResource(Resource):
-    @jwt_optional
     def get(self, room_id):
         room = Room.get_by_id(room_id=room_id)
         if room is None:
             return {'message': 'Room not found'}, HTTPStatus.NOT_FOUND
 
-        current_user = get_jwt_identity()
-
-        if room.is_public == False and room.user_id != current_user:
-            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
-
-        return room.data(), HTTPStatus.OK
+        return room_schema.dump(room).data, HTTPStatus.OK
 
     @jwt_required
     def delete(self, room_id):
@@ -48,7 +44,7 @@ class RoomResource(Resource):
         if room is None:
             return {'message': 'room not found'}, HTTPStatus.NOT_FOUND
         current_user = get_jwt_identity()
-        if current_user != room.user_id:
+        if not User.get_by_id(current_user).is_admin:
             return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
         room.delete()
         return {}, HTTPStatus.NO_CONTENT
@@ -63,7 +59,7 @@ class RoomResource(Resource):
         if room is None:
             return {'message': 'Room not found'}, HTTPStatus.NOT_FOUND
         current_user = get_jwt_identity()
-        if current_user != room.user_id:
+        if not User.get_by_id(current_user).is_admin:
             return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
 
         room.name = data.get('name') or room.name

@@ -12,6 +12,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now(), onupdate=db.func.now())
     bookings = db.relationship('Booking', backref='user')
+    is_admin = db.Column(db.Boolean(), default=False, nullable=False)
 
     @classmethod
     def get_by_username(cls, username):
