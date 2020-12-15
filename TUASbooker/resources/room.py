@@ -11,7 +11,7 @@ Room_list_schema = RoomSchema(many=True)
 
 class RoomListResource(Resource):
     def get(self):
-        rooms = Room.get_all_published()
+        rooms = Room.get_all_public()
         return Room_list_schema.dump(rooms).data, HTTPStatus.OK
 
     @jwt_required

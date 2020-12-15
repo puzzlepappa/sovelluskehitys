@@ -15,7 +15,7 @@ class Room(db.Model):
 
     @classmethod
     def get_all_public(cls):
-        return cls.query.filter_by(room_is_public=True).all()
+        return cls.query.all()
 
     @classmethod
     def get_all_by_user(cls, user_id, visibility='public'):
