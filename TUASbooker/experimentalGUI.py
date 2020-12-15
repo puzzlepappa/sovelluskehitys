@@ -17,8 +17,11 @@ def adduser():
     hashed = hash_password(password.get())
     var_username = username.get()
     var_email = email.get()
-
-    cur.execute('INSERT INTO "user" (username, email, password) VALUES '+"('"+var_username+"','"+var_email+"','"+hashed+"')")
+    if var_username!="" and var_email!="" and password.get()!="" :
+        cur.execute('INSERT INTO "user" (username, email, password) VALUES '+"('"+var_username+"','"+var_email+"','"+hashed+"')")
+    else:
+        test2 = Label(root, text="username, email, or password empty, user not created")
+        test2.pack()
     conn.commit()
 
 
@@ -36,16 +39,19 @@ def insertRoom():
     hashed_pass_str = ''.join(hashed_pass)
 
     if check_password(writtenpassword, hashed_pass_str):
+        if var_username != "" and var_room_name != "" and var_room_desc != "":
+            cur.execute("INSERT INTO rooms (name, description) VALUES (" + var_room_name + ",'" + var_room_desc + "')")
+            conn.commit()
 
-        cur.execute("INSERT INTO rooms (name, description) VALUES (" + var_room_name + ",'" + var_room_desc + "')")
-        conn.commit()
-
-        cur.close()
-        conn.close()
-        test = Label(root, text="added new room")
-        test.pack()
+            cur.close()
+            conn.close()
+            test = Label(root, text="added new room")
+            test.pack()
+        else:
+            test2 = Label(root, text="Username, room, or description empty., room not added")
+            test2.pack()
     else:
-        test2 = Label(root, text="something went wrong, room not added")
+        test2 = Label(root, text="password does not match, room not added")
         test2.pack()
 
 
