@@ -7,7 +7,7 @@ import datetime
 def validate_duration(n):
     if n < datetime.date.today():
         raise ValidationError('Cannot book room with dates from the past.')
-    elif n.weekday() < 5:
+    elif n.weekday() >= 5:
         raise ValidationError('Cannot book rooms on weekends.')
 
 class BookingSchema(Schema):
