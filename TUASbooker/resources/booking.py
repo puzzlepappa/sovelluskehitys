@@ -43,7 +43,7 @@ class BookingResource(Resource):
         if booking is None:
             return {'message': 'Booking not found'}, HTTPStatus.NOT_FOUND
 
-        return booking.data(), HTTPStatus.OK
+        return booking_schema.dump(booking).data, HTTPStatus.OK
 
     @jwt_required
     def delete(self, booking_id):
@@ -59,7 +59,7 @@ class BookingResource(Resource):
     @jwt_required
     def patch(self, booking_id):
         json_data = request.get_json()
-        data, errors = booking_schema.load(data=json_data, partial=('name',))
+        data, errors = booking_schema.load(data=json_data, partial=('booked_day', 'name'))
         if errors:
             return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
         booking = Booking.get_by_id(booking_id=booking_id)
@@ -71,10 +71,11 @@ class BookingResource(Resource):
 
         booking.name = data.get('name') or booking.name
         booking.description = data.get('description') or booking.description
-        
-        newbookdate = datetime.datetime.strptime(json_data.get("booked_day"), "%Y-%m-%d")
-        if newbookdate.date() in Room.get_all_booked_dates(json_data.get("room_id")):
-            return {"message": "Room already booked for that day"}, HTTPStatus.BAD_REQUEST
+
+        if json_data.get('booked_day') is not None:
+            newbookdate = datetime.datetime.strptime(json_data.get("booked_day"), "%Y-%m-%d")
+            if newbookdate.date() in Room.get_all_booked_dates(json_data.get("room_id")):
+                return {"message": "Room already booked for that day"}, HTTPStatus.BAD_REQUEST
         
         booking.booked_day = data.get('booked_day') or booking.booked_day
 
