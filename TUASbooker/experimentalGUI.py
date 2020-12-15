@@ -40,7 +40,7 @@ def insertRoom():
 
     if check_password(writtenpassword, hashed_pass_str):
         if var_username != "" and var_room_name != "" and var_room_desc != "":
-            cur.execute("INSERT INTO rooms (name, description) VALUES (" + var_room_name + ",'" + var_room_desc + "')")
+            cur.execute("INSERT INTO rooms (name, description) VALUES ('" + var_room_name + "','" + var_room_desc + "')")
             conn.commit()
 
             cur.close()
