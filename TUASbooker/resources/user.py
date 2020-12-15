@@ -77,9 +77,40 @@ class UserResource(Resource):
 
         return data, HTTPStatus.OK
 
+    @jwt_required
+    def delete(self, username):
+        user = User.get_by_username(username=username)
+
+        if user is None:
+            return {"message": "user not found"}, HTTPStatus.NOT_FOUND
+
+        current_user = get_jwt_identity()
+
+        if current_user == user.id:
+            user.delete()
+        else:
+            return {"message": "you do not have permission to delete this user"}, HTTPStatus.BAD_REQUEST
+
+        return {"message": "user deleted"}, HTTPStatus.OK
+
 
 class MeResource(Resource):
     @jwt_required
     def get(self):
         user = User.get_by_id(id=get_jwt_identity())
+        return user_schema.dump(user).data, HTTPStatus.OK
+
+    @jwt_required
+    def patch(self):
+        json_data = request.get_json()
+        user = User.get_by_id(id=get_jwt_identity())
+
+        if user is None:
+            return {'message': 'User not found'}, HTTPStatus.NOT_FOUND
+
+        user.username = json_data.get('username') or user.username
+        user.email = json_data.get('email') or user.email
+        user.password = hash_password(json_data.get('password')) or user.password
+
+        user.save()
         return user_schema.dump(user).data, HTTPStatus.OK

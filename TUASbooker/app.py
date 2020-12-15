@@ -4,10 +4,11 @@ from flask_restful import Api
 from config import Config
 from extensions import db, jwt
 from models.rooms import Room
-from resources.booking import BookingListResource, BookingResource, BookingPublishResource
-from resources.room import RoomListResrouce;
+from resources.booking import BookingListResource, BookingResource
+from resources.room import RoomListResource;
 from resources.user import UserListResource, UserResource, MeResource, UserBookingListResource
 from resources.token import TokenResource, RefreshResource, RevokeResource, black_list
+import experimentalGUI
 
 def create_app():
     app = Flask(__name__)
@@ -38,9 +39,8 @@ def register_resources(app):
     api.add_resource(UserBookingListResource, '/users/<string:username>/bookings')
     api.add_resource(TokenResource, '/token')
     api.add_resource(BookingListResource, '/bookings')
-    api.add_resource(RoomListResrouce, '/rooms')
+    api.add_resource(RoomListResource, '/rooms')
     api.add_resource(BookingResource, '/bookings/<int:booking_id>')
-    api.add_resource(BookingPublishResource, '/bookings/<int:booking_id>/publish')
     api.add_resource(MeResource, "/me")
     api.add_resource(RefreshResource, '/refresh')
     api.add_resource(RevokeResource, '/revoke')

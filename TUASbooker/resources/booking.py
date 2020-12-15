@@ -43,11 +43,6 @@ class BookingResource(Resource):
         if booking is None:
             return {'message': 'Booking not found'}, HTTPStatus.NOT_FOUND
 
-        current_user = get_jwt_identity()
-
-        if booking.is_publish == False and booking.user_id != current_user:
-            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
-
         return booking.data(), HTTPStatus.OK
 
     @jwt_required
@@ -76,24 +71,13 @@ class BookingResource(Resource):
 
         booking.name = data.get('name') or booking.name
         booking.description = data.get('description') or booking.description
+        
+        newbookdate = datetime.datetime.strptime(json_data.get("booked_day"), "%Y-%m-%d")
+        if newbookdate.date() in Room.get_all_booked_dates(json_data.get("room_id")):
+            return {"message": "Room already booked for that day"}, HTTPStatus.BAD_REQUEST
+        
         booking.booked_day = data.get('booked_day') or booking.booked_day
 
         booking.save()
         return booking_schema.dump(booking).data, HTTPStatus.OK
 
-class BookingPublishResource(Resource):
-    def put(self, booking_id):
-        booking = Booking.get_by_id(booking_id=booking_id)
-        if booking is None:
-            return {'message': 'booking not found'}, HTTPStatus.NOT_FOUND
-        booking.is_publish = True
-        booking.save()
-        return {}, HTTPStatus.NO_CONTENT
-
-    def delete(self, booking_id):
-        booking = Booking.get_by_id(booking_id=booking_id)
-        if booking is None:
-            return {'message': 'booking not found'}, HTTPStatus.NOT_FOUND
-        booking.is_publish = False
-        booking.save()
-        return {}, HTTPStatus.NO_CONTENT

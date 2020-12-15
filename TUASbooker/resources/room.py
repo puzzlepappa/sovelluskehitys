@@ -73,19 +73,3 @@ class RoomResource(Resource):
         return room_schema.dump(room).data, HTTPStatus.OK
 
 
-class RoomPublishResource(Resource):
-    def put(self, room_id):
-        room = Room.get_by_id(room_id=room_id)
-        if room is None:
-            return {'message': 'Room not found'}, HTTPStatus.NOT_FOUND
-        room.is_public = True
-        room.save()
-        return {}, HTTPStatus.NO_CONTENT
-
-    def delete(self, room_id: Any):
-        room = Room.get_by_id(room_id=room_id)
-        if room is None:
-            return {'message': 'room not found'}, HTTPStatus.NOT_FOUND
-        room.is_public = False
-        room.save()
-        return {}, HTTPStatus.NO_CONTENT

@@ -82,4 +82,4 @@ password.pack()
 myButton = Button(root, text="adduser", command=adduser)
 myButton.pack()
 
-root.mainloop()
+#root.mainloop()
