@@ -8,7 +8,8 @@ from schemas.room import RoomSchema
 room_schema = RoomSchema()
 Room_list_schema = RoomSchema(many=True)
 
-class RoomListResrouce(Resource):
+
+class RoomListResource(Resource):
     def get(self):
         rooms = Room.get_all_published()
         return Room_list_schema.dump(rooms).data, HTTPStatus.OK
@@ -19,12 +20,14 @@ class RoomListResrouce(Resource):
         current_user = get_jwt_identity()
         data, errors = room_schema.load(data=json_data)
         if errors:
-            return {'message': "Validation errors", 'errors': errors},HTTPStatus.BAD_REQUEST
+            return {'message': "Validation errors", 'errors': errors}, HTTPStatus.BAD_REQUEST
 
         room = Room(**data)
         room.user_id = current_user
         room.save()
         return room_schema.dump(room).data, HTTPStatus.CREATED
+
+
 class RoomResource(Resource):
     @jwt_optional
     def get(self, room_id):
@@ -46,10 +49,9 @@ class RoomResource(Resource):
             return {'message': 'room not found'}, HTTPStatus.NOT_FOUND
         current_user = get_jwt_identity()
         if current_user != room.user_id:
-                return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
+            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
         room.delete()
         return {}, HTTPStatus.NO_CONTENT
-
 
     @jwt_required
     def patch(self, room_id):
@@ -70,6 +72,7 @@ class RoomResource(Resource):
         room.save()
         return room_schema.dump(room).data, HTTPStatus.OK
 
+
 class RoomPublishResource(Resource):
     def put(self, room_id):
         room = Room.get_by_id(room_id=room_id)
@@ -79,7 +82,7 @@ class RoomPublishResource(Resource):
         room.save()
         return {}, HTTPStatus.NO_CONTENT
 
-    def delete(self, room_id):
+    def delete(self, room_id: Any):
         room = Room.get_by_id(room_id=room_id)
         if room is None:
             return {'message': 'room not found'}, HTTPStatus.NOT_FOUND
