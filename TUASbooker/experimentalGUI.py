@@ -30,7 +30,7 @@ def insertRoom():
     var_room_desc = room_desc.get()
     room_desc.delete(0, END)
     var_username = username.get()
-    cur.execute('SELECT password FROM "user" WHERE'+"username='"+var_username+"'")
+    cur.execute('SELECT password FROM "user" WHERE '+"username='"+var_username+"'")
     hashed_pass = cur.fetchone()
     writtenpassword = password.get()
     hashed_pass_str = ''.join(hashed_pass)
